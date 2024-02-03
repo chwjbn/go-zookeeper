@@ -342,6 +342,11 @@ func (c *Conn) SetLogger(l Logger) {
 func (c *Conn) setTimeouts(sessionTimeoutMs int32) {
 	c.sessionTimeoutMs = sessionTimeoutMs
 	sessionTimeout := time.Duration(sessionTimeoutMs) * time.Millisecond
+
+	if sessionTimeout < time.Second {
+		sessionTimeout = 3 * time.Second
+	}
+
 	c.recvTimeout = sessionTimeout * 2 / 3
 	c.pingInterval = c.recvTimeout / 2
 }
